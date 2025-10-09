@@ -12,8 +12,11 @@ prefer `requests` or `httpx`, feel free to swap the implementation.
 
 from __future__ import annotations
 
+
 from fastapi import APIRouter, Request
 from src.graph.graph import stream_graph_updates
+from src.nodes.push_notification import send_push_notification
+
 
 router = APIRouter()
 
@@ -21,4 +24,6 @@ router = APIRouter()
 async def interact(request: Request):
     data = await request.json()
     user_input = data['human_says']
-    return stream_graph_updates(user_input)
+    ai_output = stream_graph_updates(user_input)
+    send_push_notification(ai_output)
+    return ai_output
