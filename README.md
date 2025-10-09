@@ -1,4 +1,3 @@
-(The file `/Users/aditya/ai_playground/agentic-graph/README.md` exists, but is empty)
 # Agentic-Graph
 
 Lightweight experiment wiring a small LangGraph-like workflow to a locally
