@@ -1,6 +1,8 @@
-def main():
-    print("Hello from agentic-graph!")
+# main.py
+from fastapi import FastAPI
+from src.router import routes
 
+app = FastAPI()
 
-if __name__ == "__main__":
-    main()
+# Include the router from the items module
+app.include_router(routes.router)
