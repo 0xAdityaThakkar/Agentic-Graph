@@ -1,8 +1,10 @@
 import os
 import requests
+from langchain_core.tools import tool
 
+@tool
 def send_push_notification(message: str):
-
+    """Send a push notification using the Pushover service."""
     PUSHOVER_USER_KEY = os.getenv("PUSHOVER_USER_KEY")
     PUSHOVER_APP_KEY = os.getenv("PUSHOVER_APP_KEY")
     if not PUSHOVER_USER_KEY or not PUSHOVER_APP_KEY:
