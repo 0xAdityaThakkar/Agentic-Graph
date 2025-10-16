@@ -1,6 +1,5 @@
 # mcp_client.py
 import httpx
-import asyncio
 from typing import Dict, Any
 
 class MCPClient:
@@ -24,3 +23,10 @@ class MCPClient:
                 return response.status_code == 200
         except Exception:
             return False
+
+    async def get_tools(self, tools_endpoint: str='/list-tools') -> Dict[str, Any]:
+        url = f"{self.base_url}/{tools_endpoint.lstrip('/')}"
+        async with httpx.AsyncClient(verify=False) as client:
+            response = await client.get(url)
+            response.raise_for_status()
+            return response.json()

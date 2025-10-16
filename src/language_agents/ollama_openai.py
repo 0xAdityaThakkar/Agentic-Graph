@@ -1,6 +1,7 @@
+from src.data.ollama_openai_prompt import agent_prompt_bundle
 from langchain_openai import ChatOpenAI
+from src.nodes.mcp.mcp_client import MCPClient
 
-# llm = Ollama(model="llama3", temperature=0.7)
 llm = ChatOpenAI(
     api_key="ollama",
     model="llama3",

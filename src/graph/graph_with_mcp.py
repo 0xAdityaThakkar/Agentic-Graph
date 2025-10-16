@@ -2,6 +2,8 @@ from src.state.state import State
 from langgraph.graph import StateGraph
 from langgraph.graph import START, END
 from src.language_agents.ollama_openai import call_ollama
+from src.nodes.mcp.mcp_client import MCPClient
+from src.app_conf import AVAILABLE_MCP_TOOLS
 from src.nodes.mcp_tool import mcp_node as mcp_tool_node
 
 def router_node(state: State):
@@ -25,8 +27,22 @@ def router_decision(state: State) -> str:
 def return_response(state):
     return state
 
+async def discover_mcp_tools():
+    tools = []
+    for mcp_tool_config in AVAILABLE_MCP_TOOLS:
+        client = MCPClient(
+            name=mcp_tool_config["name"],
+            base_url=mcp_tool_config["base_url"],
+            headers=mcp_tool_config.get("headers", {}),
+            timeout=mcp_tool_config.get("timeout", 5.0)
+        )
+        tool = await client.get_tools(mcp_tool_config.get("tools_endpoint", "/list-tools"))
+        tools.append(tool)
+    return tools
+
 async def build_and_execute_graph(user_input: str):
-    builder = StateGraph(State)
+    mcp_tools = await discover_mcp_tools()
+    builder = StateGraph(State({'tools': mcp_tools}))
     builder.add_node("llm", call_ollama)
     builder.add_node("router", router_node)
     builder.add_node("mcp_tool", mcp_tool_node)
