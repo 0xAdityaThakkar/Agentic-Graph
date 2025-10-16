@@ -5,6 +5,7 @@ from src.language_agents.ollama_openai import call_ollama
 from src.nodes.mcp.mcp_client import MCPClient
 from src.app_conf import AVAILABLE_MCP_TOOLS
 from src.nodes.mcp_tool import mcp_node as mcp_tool_node
+from src.nodes.mcp.mcp_registry import build_mcp_registry
 
 def router_node(state: State):
     # node handlers must return a state dict (no-op router)

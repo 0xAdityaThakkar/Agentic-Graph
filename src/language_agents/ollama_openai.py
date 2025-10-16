@@ -18,3 +18,6 @@ async def call_ollama(state):
     except Exception as e:
         state["messages"].append({"role": "assistant", "content": "Call mcp: tool"})
         return state
+
+async def build_ollama_prompt(mcp_tools):
+    pass
