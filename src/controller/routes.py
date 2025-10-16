@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Request
 from src.graph.graph import stream_graph_updates
-from src.nodes.push_notification import send_push_notification
+from src.graph.graph_with_mcp import build_and_execute_graph
 
 
 router = APIRouter()
@@ -24,6 +24,12 @@ router = APIRouter()
 async def interact(request: Request):
     data = await request.json()
     user_input = data['human_says']
-    ai_output = stream_graph_updates(user_input)
-    send_push_notification(ai_output)
+    ai_output = await stream_graph_updates(user_input)
+    return ai_output
+
+@router.post("/interact-mcp-graph")
+async def interact(request: Request):
+    data = await request.json()
+    user_input = data['human_says']
+    ai_output = await build_and_execute_graph(user_input)
     return ai_output

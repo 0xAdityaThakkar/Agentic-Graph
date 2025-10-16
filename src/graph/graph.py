@@ -13,7 +13,7 @@ llm = ChatOpenAI(
     base_url="http://192.168.0.104:5050/v1",
 )
 llm_with_tools = llm.bind_tools([send_push_notification])
-tools = [send_push_notification]
+tools = [send_push_notification] 
 # Node for calling the LLM
 async def call_llm(state: State):
     messages = state["messages"]
@@ -53,7 +53,7 @@ def create_graph():
     builder.add_node("call_tool", call_tool)
     builder.add_edge(START, "call_llm")
     builder.add_edge("call_tool", "call_llm")
-    
+    # builder.add_node("mcp_query", mcp_node)
     builder.add_conditional_edges(
         "call_llm",
         tools_condition,
@@ -68,8 +68,5 @@ def create_graph():
 
 graph = create_graph()
 
-def stream_graph_updates(user_input: str):
-    
-    for event in graph.stream({"messages": [{"role": "user", "content": user_input}]}):
-        for value in event.values():
-            return value["messages"][-1]
+async def stream_graph_updates(user_input: str):
+    return await graph.ainvoke({"messages": [{"role": "user", "content": user_input}]})

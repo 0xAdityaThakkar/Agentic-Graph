@@ -1,0 +1,19 @@
+from langchain_openai import ChatOpenAI
+
+# llm = Ollama(model="llama3", temperature=0.7)
+llm = ChatOpenAI(
+    api_key="ollama",
+    model="llama3",
+    base_url="http://192.168.0.104:5050/v1",
+)
+
+
+async def call_ollama(state):
+    try:
+        prompt = state["messages"][-1]["content"]
+        response = await llm.ainvoke(prompt)
+        state["messages"].append({"role": "assistant", "content": response})
+        return state
+    except Exception as e:
+        state["messages"].append({"role": "assistant", "content": "Call mcp: tool"})
+        return state
